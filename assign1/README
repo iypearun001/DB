@@ -1,0 +1,19 @@
+
+APPROACH:
+1) Storage engine keeps track of all valid SM_FileHandle
+   (in a array of pointers) that can use read and write API's.
+
+2) Every API's checks if storage manager is initialized +
+   check if given SM_FileHandle is valid and then proceed.
+
+3) ensureCapacity() does not need to write zeroblock to
+   each and every block till the numOfPages requests.
+   Eg: If we have 5 blocks in a file and we invoke
+       ensureCapacity() with numOfPages=10. It is enough
+       to write the 10 block along. The 6,7,8,9th block
+       are created automatically and is assigned to
+       zerobytes, this is unix behavior. (Mostly other OS too).
+
+4) Additional error message are added to enable clarify.
+
+5) Valgrind is run on test_assign1_1. Fixes are made.
